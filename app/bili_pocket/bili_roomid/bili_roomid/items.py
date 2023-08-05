@@ -7,5 +7,6 @@ import scrapy
 
 class BiliRoomIdItem(scrapy.Item):
     roomid = scrapy.Field()
+    uid = scrapy.Field()
     roomblock =  scrapy.Field()
 

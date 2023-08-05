@@ -14,5 +14,6 @@ class BiliRoomIdPipeline:
     def process_item(self, item, spider):
         roomid = item.get('roomid','')
         roomblock = item.get('roomblock','')
-        self.rooms_li.append(str(roomid)+' '+ roomblock + '\n')
+        uid = item.get('uid','')
+        self.rooms_li.append(str(roomid)+' '+ str(uid) + ' ' + roomblock + '\n')
         return item

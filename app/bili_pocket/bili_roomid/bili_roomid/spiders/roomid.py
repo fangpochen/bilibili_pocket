@@ -43,12 +43,11 @@ class RoomIdSpider(scrapy.Spider):
         sel = Selector(response).extract()
         data = sel.get('data', '')
         rooms_li = data.get('list','')
-        print('------------------------------',len(rooms_li))
         if rooms_li:
             for roominfo in rooms_li:
-                print(roominfo['roomid'])
                 room_item = BiliRoomIdItem()
                 room_item['roomid'] = roominfo.get('roomid','')
+                room_item['uid'] = roominfo.get('uid','')
                 room_item['roomblock'] = block
                 yield room_item
         else:
