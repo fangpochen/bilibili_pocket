@@ -24,12 +24,15 @@ class BiliRoomInfoPipeline:
         self.pocket_li.sort(key=lambda ele: ele[3], reverse=True)  # indx3是红包价值
         self.tianxuan_li.sort(key=lambda ele: ele[2])  # indx2是天选价值
         pocket_arr = []
+        update_time = datetime.datetime.now()
         for pocket in self.pocket_li:
-            update_time = datetime.datetime.now()
+            delta = datetime.timedelta(seconds=pocket[0])
+            end_time = update_time + delta
             pocket_data = Pocket(price=pocket[3],
                                  room_id=pocket[5].replace('https://live.bilibili.com/', ''),
                                  leave_time=pocket[0],
                                  update_time=update_time,
+                                 end_time=end_time
                                  )
             pocket_arr.append(pocket_data)
             print('最终红包信息-----------------', pocket)
@@ -37,15 +40,17 @@ class BiliRoomInfoPipeline:
 
         tian_arr = []
         for tian in self.tianxuan_li:
-            update_time = datetime.datetime.now()
+            delta = datetime.timedelta(seconds=tian[0])
+            end_time = update_time + delta
             tian_data = Tian(price=tian[2],
                              room_id=tian[5].replace('https://live.bilibili.com/', ''),
                              leave_time=tian[0],
                              update_time=update_time,
+                             end_time=end_time
                              )
             tian_arr.append(tian_data)
             print('最终天选信息-----------------', tian)
-        save_list(pocket_arr)
+        save_list(tian_arr)
 
     def process_item(self, item, spider):
         self.pocket_info = item.get('pocket_info', '')

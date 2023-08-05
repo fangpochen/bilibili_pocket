@@ -42,11 +42,12 @@ class Phone(Model):
 class Pocket(Model):
     __tablename__ = "pocket"
     id = Column(Integer, primary_key=True)  # 编号
-    room_id = Column(String(200), primary_key=True)  # 房间号
+    room_id = Column(String(200), unique=True)  # 房间号
     price = Column(Integer)  # 价值
     total_p = Column(Integer)  # 在线人数
     leave_time = Column(Integer)  # 剩余秒数
     update_time = Column(DateTime, index=True, default=datetime.now)  # 更新时间
+    end_time = Column(DateTime, index=True, default=datetime.now)  # 结束时间
 
     def __repr__(self):
         return "<Pocket %r>" % self.name
@@ -56,11 +57,12 @@ class Pocket(Model):
 class Tian(Model):
     __tablename__ = "tian"
     id = Column(Integer, primary_key=True)  # 编号
-    room_id = Column(String(200), primary_key=True)  # 房间号
+    room_id = Column(String(200), unique=True)  # 房间号
     price = Column(String(200))  # 价值
     total_p = Column(Integer)  # 在线人数
     leave_time = Column(Integer)  # 剩余秒数
     update_time = Column(DateTime, index=True, default=datetime.now)  # 更新时间
+    end_time = Column(DateTime, index=True, default=datetime.now)  # 结束时间
 
     def __repr__(self):
         return "<Tian %r>" % self.name
