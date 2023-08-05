@@ -1,0 +1,14 @@
+0000000000000000000000000000000000000000 a5ed451aa9802e274c2d02f54d6ba60cdcdea8b7 fangying <fangying@newland.com.cn> 1634605073 +0800	commit (initial): first commit
+a5ed451aa9802e274c2d02f54d6ba60cdcdea8b7 0000000000000000000000000000000000000000 fangying <fangying@newland.com.cn> 1634605073 +0800	Branch: renamed refs/heads/master to refs/heads/main
+0000000000000000000000000000000000000000 a5ed451aa9802e274c2d02f54d6ba60cdcdea8b7 fangying <fangying@newland.com.cn> 1634605073 +0800	Branch: renamed refs/heads/master to refs/heads/main
+a5ed451aa9802e274c2d02f54d6ba60cdcdea8b7 1c98d89ae37192a4c197ed63179b3339ac410757 fangying <fangying@newland.com.cn> 1634605116 +0800	commit: 初始化
+1c98d89ae37192a4c197ed63179b3339ac410757 1140d5d60c85aa1482043f5f55a7ada1fc600573 fangying <fangying@newland.com.cn> 1634628764 +0800	commit: 数据库统计
+1140d5d60c85aa1482043f5f55a7ada1fc600573 5161f5c017ac7b1bfa14d06625f6eddf91574fdb fangying <fangying@newland.com.cn> 1634697952 +0800	commit: 统计分析 天数
+5161f5c017ac7b1bfa14d06625f6eddf91574fdb b63fbd28d1fbf217414d7924ca258711965f70c7 fangying <fangying@newland.com.cn> 1634713520 +0800	commit: 统计分析 天数
+b63fbd28d1fbf217414d7924ca258711965f70c7 3dde2faa3f1b737bb8e43ae5416070cdc81a7fbd fangying <fangying@newland.com.cn> 1634721346 +0800	commit: 修改数据插入方式
+3dde2faa3f1b737bb8e43ae5416070cdc81a7fbd 95c72901527e08041a2ff6825549bb66081966f7 fangying <fangying@newland.com.cn> 1634722018 +0800	commit: 修改分析算法
+95c72901527e08041a2ff6825549bb66081966f7 3d53ae6093ada6ad68095d9b39d1878349abd3e2 fangying <fangying@newland.com.cn> 1634804025 +0800	commit: 定义计算方式，增加定时计算数据功能
+3d53ae6093ada6ad68095d9b39d1878349abd3e2 e99c9c20f2a314c268085c7f959beed21c89b17d fangying <fangying@newland.com.cn> 1634882039 +0800	commit: 部署方案
+e99c9c20f2a314c268085c7f959beed21c89b17d cc8dc4f205b092e9b1f78d16bad02cdfba6f01af fangying <fangying@newland.com.cn> 1635125875 +0800	commit: 部署方案
+cc8dc4f205b092e9b1f78d16bad02cdfba6f01af 32ee6b0c2c2989c142ae1810627281565997a245 fangying <fangying@newland.com.cn> 1640744086 +0800	commit: 部署方案
+32ee6b0c2c2989c142ae1810627281565997a245 2708a3b668985ec814ce8fce5ca064978fc182d3 fangying <fangying@newland.com.cn> 1640744161 +0800	commit: 部署方案
