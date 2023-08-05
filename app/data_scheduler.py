@@ -3,8 +3,6 @@ from datetime import datetime
 from random import randint
 
 from app import db
-from app.bili_pocket.bili_roomid.main import start_collect_room_id
-from app.bili_pocket.bili_roominfo.main import start_collect_pocket
 from app.models import Phone, Pocket, Tian
 from app.mysql_util import save_list
 
@@ -33,19 +31,19 @@ BALL_URL = 'http://nba.titan007.com/jsData/matchResult/{}.js?version=2023101022'
 
 class Config(object):
     JOBS = [
-        {
-            'id': 'job1',
-            'func': 'app.data_scheduler:collect_pocket',
-            'trigger': 'interval',  # 指定任务触发器 interval
-            # 'hour': 15,
-            'seconds': 10
-        },
-        {
-            'id': 'job2',
-            'func': 'app.data_scheduler:collect_room_id',
-            'trigger': 'interval',  # 指定任务触发器 interval
-            'minutes': 30
-        },
+        # {
+        #     'id': 'job1',
+        #     'func': 'app.data_scheduler:collect_pocket',
+        #     'trigger': 'interval',  # 指定任务触发器 interval
+        #     # 'hour': 15,
+        #     'seconds': 10
+        # },
+        # {
+        #     'id': 'job2',
+        #     'func': 'app.data_scheduler:collect_room_id',
+        #     'trigger': 'interval',  # 指定任务触发器 interval
+        #     'minutes': 30
+        # },
         {
             'id': 'job3',
             'func': 'app.data_scheduler:delete_expired_room_info',
@@ -98,19 +96,23 @@ def change_phone_number():  # 一个函数，用来做定时任务的任务。
         save_list(phone_arr)
 
 
-def collect_pocket():
-    start_collect_pocket()
+# def collect_pocket():
+#     crawl_threads = Process(target=start_collect_pocket)
+#     crawl_threads.start()
+#     crawl_threads.join()
+#     print(1111111111111111)
 
 
-def collect_room_id():
-    start_collect_room_id()
+# def collect_room_id():
+#     start_collect_room_id()
 
 
 def delete_expired_room_info():
     now_time = datetime.now()
     db.session.query(Pocket).filter(now_time > Pocket.end_time).delete()
-    db.session.query(Tian).filter(now_time > Pocket.end_time).delete()
+    db.session.query(Tian).filter(now_time > Tian.end_time).delete()
     db.session.commit()
+    db.session.close()
 
 
 if __name__ == '__main__':

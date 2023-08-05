@@ -3,7 +3,7 @@ import json
 import logging
 
 import requests
-from flask import request
+from flask import request, jsonify
 from flask_appbuilder import BaseView, expose, has_access, ModelView
 from flask_appbuilder.models.sqla.interface import SQLAInterface
 
@@ -43,8 +43,17 @@ class MyView(BaseView):
     @has_access
     def pocket(self, *args):
         now_time = datetime.datetime.now()
-        pocket = db.session.query(Pocket).filter(now_time < Pocket.end_time).all()
-        return pocket
+        pockets = db.session.query(Pocket).filter(now_time < Pocket.end_time).all()
+        pocket_data = []
+        for pocket in pockets:
+            pocket_data.append({
+                'room_id': pocket.room_id,
+                'price': pocket.price,
+                'leave_time': pocket.leave_time,
+                'end_time': pocket.end_time
+                # 添加其他属性
+            })
+        return jsonify(pocket_data)
 
     @expose("/phone/", methods=["GET"])
     @has_access
@@ -55,6 +64,7 @@ class MyView(BaseView):
         phone.update_time = now_time
         print(phone.phone)
         db.session.commit()
+        db.session.close()
         return phone.phone
 
     @expose("/phonesms/", methods=["GET"])

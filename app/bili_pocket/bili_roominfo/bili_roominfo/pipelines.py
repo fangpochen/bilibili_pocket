@@ -6,10 +6,9 @@
 
 import datetime
 # useful for handling different item types with a single interface
+import os
+import sqlite3
 import time
-
-from app.models import Pocket, Tian
-from app.mysql_util import save_list
 
 
 class BiliRoomInfoPipeline:
@@ -18,46 +17,60 @@ class BiliRoomInfoPipeline:
         self.pocket_li = []
         self.tianxuan_li = []
         self.base_url = 'https://live.bilibili.com/'
+        basedir = os.path.abspath(os.path.dirname(__file__)).replace("\\app\\bili_pocket\\bili_roominfo\\bili_roominfo",
+                                                                     "")
+        self.conn = sqlite3.connect(os.path.join(basedir, "app.db"))
+        self.cursor = self.conn.cursor()
+
+    def save_item(self, room_id, price, total_p, leave_time, update_time, end_time):
+        # 执行插入操作
+        try:
+            self.cursor.execute(
+                "INSERT INTO pocket (room_id,price,total_p,leave_time,update_time,end_time) VALUES (?, ?, ?, ?, ?, ?)",
+                (room_id, price, total_p, leave_time, update_time, end_time))
+            self.conn.commit()
+        except Exception as e:
+            print(room_id, e)
+
+    def save_tian_item(self, room_id, price, total_p, leave_time, update_time, end_time):
+        # 执行插入操作
+        try:
+            self.cursor.execute(
+                "INSERT INTO tian (room_id,price,total_p,leave_time,update_time,end_time) VALUES (?, ?, ?, ?, ?, ?)",
+                (room_id, price, total_p, leave_time, update_time, end_time))
+            self.conn.commit()
+        except Exception as e:
+            print(room_id, e)
 
     def close_spider(self, spider):
         # print(self.blocknumdict)
         self.pocket_li.sort(key=lambda ele: ele[3], reverse=True)  # indx3是红包价值
         self.tianxuan_li.sort(key=lambda ele: ele[2])  # indx2是天选价值
-        pocket_arr = []
+        # pocket_arr = []
         update_time = datetime.datetime.now()
         for pocket in self.pocket_li:
             delta = datetime.timedelta(seconds=pocket[0])
             end_time = update_time + delta
-            pocket_data = Pocket(price=pocket[3],
-                                 room_id=pocket[5].replace('https://live.bilibili.com/', ''),
-                                 leave_time=pocket[0],
-                                 update_time=update_time,
-                                 end_time=end_time
-                                 )
-            pocket_arr.append(pocket_data)
+            room_id = pocket[5].replace('https://live.bilibili.com/', '')
+            self.save_item(room_id, pocket[3], pocket[7], pocket[0], update_time, end_time)
             print('最终红包信息-----------------', pocket)
-        save_list(pocket_arr)
 
-        tian_arr = []
+        # tian_arr = []
         for tian in self.tianxuan_li:
             delta = datetime.timedelta(seconds=tian[0])
             end_time = update_time + delta
-            tian_data = Tian(price=tian[2],
-                             room_id=tian[5].replace('https://live.bilibili.com/', ''),
-                             leave_time=tian[0],
-                             update_time=update_time,
-                             end_time=end_time
-                             )
-            tian_arr.append(tian_data)
+            room_id = tian[5].replace('https://live.bilibili.com/', '')
+            self.save_tian_item(room_id, tian[2], tian[7], tian[0], update_time, end_time)
             print('最终天选信息-----------------', tian)
-        save_list(tian_arr)
+        # save_list(tian_arr)
+        self.conn.close()
 
     def process_item(self, item, spider):
         self.pocket_info = item.get('pocket_info', '')
         self.block = item.get('room_block', '')
         self.roomid = item.get('room_id', '')
-        self.person_num = item.get('person_num','')['onlineNum']  # 在线人数
-        print('-------------------在线人数',self.person_num)
+        self.person_num = item.get('person_num', '')['onlineNum']  # 在线人数
+        print('-------------------在线人数', self.person_num)
         self.cur_url = self.base_url + str(self.roomid)
         if self.pocket_info.get('popularity_red_pocket'):
             popul_pocket = self.get_popular_pocket()
@@ -118,3 +131,7 @@ class BiliRoomInfoPipeline:
             return
         else:
             return yield_tianxuaninfo
+
+
+if __name__ == '__main__':
+    b = BiliRoomInfoPipeline()
