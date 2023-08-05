@@ -9,4 +9,5 @@ import scrapy
 class BiliRoomInfoItem(scrapy.Item):
     pocket_info = scrapy.Field()
     room_block = scrapy.Field()
-    room_id=  scrapy.Field()
+    room_id= scrapy.Field()
+    person_num = scrapy.Field()

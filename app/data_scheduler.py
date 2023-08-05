@@ -2,6 +2,7 @@ import os
 from datetime import datetime
 from random import randint
 
+from app.bili_pocket.bili_roomid.main import start_collect_room_id
 from app.bili_pocket.bili_roominfo.main import start_collect_pocket
 from app.models import Phone
 from app.mysql_util import save_list
@@ -38,13 +39,12 @@ class Config(object):
             # 'hour': 15,
             'seconds': 30
         },
-        # {
-        #     'id': 'job2',
-        #     'func': 'app.data_scheduler:get_dish_data',
-        #     'trigger': 'cron',  # 指定任务触发器 interval
-        #     'hour': 15,
-        #     'minute': 10
-        # },
+        {
+            'id': 'job2',
+            'func': 'app.data_scheduler:get_home_data',
+            'trigger': 'interval',  # 指定任务触发器 interval
+            'minutes': 30
+        },
         # {
         #     'id': 'job3',
         #     'func': 'app.data_scheduler:get_home_data',
@@ -102,7 +102,8 @@ def collect_pocket():
     start_collect_pocket()
 
 
-# def get_home_data():
+def get_home_data():
+    start_collect_room_id()
 
 
 if __name__ == '__main__':

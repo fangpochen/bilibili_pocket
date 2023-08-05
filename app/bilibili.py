@@ -8,7 +8,6 @@ from flask_appbuilder import BaseView, expose, has_access, ModelView
 from flask_appbuilder.models.sqla.interface import SQLAInterface
 
 from . import appbuilder, db
-from .data_scheduler import pocket
 from .models import Phone, Pocket
 
 
@@ -43,6 +42,8 @@ class MyView(BaseView):
     @expose("/pocket/", methods=["GET"])
     @has_access
     def pocket(self, *args):
+        now_time = datetime.datetime.now()
+        pocket = db.session.query(Pocket).filter(now_time < Pocket.end_time).all()
         return pocket
 
     @expose("/phone/", methods=["GET"])

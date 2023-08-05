@@ -1,5 +1,4 @@
 import scrapy
-import openpyxl
 from scrapy import Selector, Request
 from scrapy.http import HtmlResponse
 from ..items import BiliRoomInfoItem
@@ -15,15 +14,15 @@ class RoomInfoSpider(scrapy.Spider):
         with open('../RoomsId_during.txt', 'r') as f:
             rooms_li = f.readlines()
 
-        base_url = 'https://api.live.bilibili.com/xlive/lottery-interface/v1/lottery/getLotteryInfoWeb?'
+        base_pocket_url = 'https://api.live.bilibili.com/xlive/lottery-interface/v1/lottery/getLotteryInfoWeb?'
         for room in rooms_li:
             room.strip()
-            # print()
-            room_id, room_block = room.split(' ')[0],room.split(' ')[1]
-            sub_url = base_url+f'roomid={room_id}'
-            yield Request(url=sub_url,callback=self.parse,cb_kwargs={'block': room_block,'roomid':room_id})  # 设置代理        
+            room_id, u_id, room_block = room.split(' ')[0],room.split(' ')[1],room.split(' ')[2]
+            sub_pocket_url = base_pocket_url+f'roomid={room_id}' 
+            yield Request(url=sub_pocket_url,callback=self.pocket_parse,cb_kwargs={'block': room_block,'roomid':room_id, 'uid': u_id})  # 设置代理        
 
-    def parse(self, response: HtmlResponse, **kwargs):
+    def pocket_parse(self, response: HtmlResponse, **kwargs):
+        u_id = kwargs['uid']
         block = kwargs['block']
         roomid = kwargs['roomid']
         sel = Selector(response).extract()
@@ -32,5 +31,17 @@ class RoomInfoSpider(scrapy.Spider):
         roominfo_item['pocket_info'] = data
         roominfo_item['room_block'] = block
         roominfo_item['room_id'] = roomid
+
+        base_person_num_url = 'https://api.live.bilibili.com/xlive/general-interface/v1/rank/getOnlineGoldRank?'
+        sub_uid_url = base_person_num_url+f'ruid={u_id}&roomId={roomid}&page=1&pageSize=50'
+        yield  Request(url=sub_uid_url,callback=self.personnum_parse,cb_kwargs={'roominfo_item': roominfo_item})  # 设置代理   
+    
+    def personnum_parse(self, response: HtmlResponse, **kwargs):
+        roominfo_item = kwargs['roominfo_item']
+        sel = Selector(response).extract()
+        personnum_data = sel.get('data', '')
+        roominfo_item['person_num'] = personnum_data
         yield roominfo_item
+
+
 

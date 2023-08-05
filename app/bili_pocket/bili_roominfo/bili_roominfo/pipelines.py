@@ -56,6 +56,8 @@ class BiliRoomInfoPipeline:
         self.pocket_info = item.get('pocket_info', '')
         self.block = item.get('room_block', '')
         self.roomid = item.get('room_id', '')
+        self.person_num = item.get('person_num','')['onlineNum']  # 在线人数
+        print('-------------------在线人数',self.person_num)
         self.cur_url = self.base_url + str(self.roomid)
         if self.pocket_info.get('popularity_red_pocket'):
             popul_pocket = self.get_popular_pocket()
@@ -97,7 +99,7 @@ class BiliRoomInfoPipeline:
         diff = dt2 - dt1  # 计算时间差
         leave_time = diff.total_seconds()
         yield_pocketinfo = [leave_time, join_requirement, wait_num, total_price, sub_gift_li, self.cur_url,
-                            self.block]  # 剩余时间、等级需要、等待第几个红包、总价值、礼物列表,地址、分区
+                            self.block, self.person_num]  # 剩余时间、等级需要、等待第几个红包、总价值、礼物列表,地址、分区
         if join_requirement > 1:  # 如果要求的等级高 或者红包不是当前红包 则略过
             return
         else:
@@ -111,7 +113,7 @@ class BiliRoomInfoPipeline:
         leave_time = tianxuan_info.get('time')
         require_value = tianxuan_info.get('require_value')  # 对等级的限制值为0则没有限制
         yield_tianxuaninfo = [leave_time, require_value, award_price_text, award_name, award_num, self.cur_url,
-                              self.block]  # 剩余时间、等级需求、价值、礼物名称、数量,地址、分区
+                              self.block, self.person_num]  # 剩余时间、等级需求、价值、礼物名称、数量,地址、分区
         if require_value > 0 or '电池' not in award_price_text:  # 如果限制等级则略过
             return
         else:
