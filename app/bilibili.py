@@ -8,7 +8,7 @@ from flask_appbuilder import BaseView, expose, has_access, ModelView
 from flask_appbuilder.models.sqla.interface import SQLAInterface
 
 from . import appbuilder, db
-from .models import Phone, Pocket
+from .models import Phone, Pocket, Tian
 
 
 class PocketModelView(ModelView):
@@ -43,17 +43,35 @@ class MyView(BaseView):
     @has_access
     def pocket(self, *args):
         now_time = datetime.datetime.now()
-        pockets = db.session.query(Pocket).filter(now_time < Pocket.end_time).all()
+        pockets = db.session.query(Pocket).filter(now_time < Pocket.end_time).order_by(Pocket.price.desc()).all()
         pocket_data = []
         for pocket in pockets:
             pocket_data.append({
                 'room_id': pocket.room_id,
                 'price': pocket.price,
                 'leave_time': pocket.leave_time,
-                'end_time': pocket.end_time
+                'end_time': pocket.end_time,
+                'total_p': pocket.total_p
                 # 添加其他属性
             })
         return jsonify(pocket_data)
+
+    @expose("/tian/", methods=["GET"])
+    @has_access
+    def tian(self, *args):
+        now_time = datetime.datetime.now()
+        tians = db.session.query(Tian).filter(now_time < Tian.end_time).all()
+        tians_data = []
+        for pocket in tians:
+            tians_data.append({
+                'room_id': pocket.room_id,
+                'price': pocket.price,
+                'leave_time': pocket.leave_time,
+                'end_time': pocket.end_time,
+                'total_p': pocket.total_p
+                # 添加其他属性
+            })
+        return jsonify(tians_data)
 
     @expose("/phone/", methods=["GET"])
     @has_access
