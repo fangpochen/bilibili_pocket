@@ -5,7 +5,7 @@ from ..items import BiliRoomInfoItem
 
 
 class RoomInfoSpider(scrapy.Spider):
-    name = "roominfo"
+    name = "roominfo_b2"
     allowed_domains = ["live.bilibili.com"]
     start_urls = ["https://live.bilibili.com/p/eden/"]
     
@@ -13,11 +13,13 @@ class RoomInfoSpider(scrapy.Spider):
     def start_requests(self):
         with open('../RoomsId_during.txt', 'r') as f:
             rooms_li = f.readlines()
-
+        block2 = ['xuni', 'diantai'] # roominfo_b2 负责1个热门区域和6个冷门区
         base_pocket_url = 'https://api.live.bilibili.com/xlive/lottery-interface/v1/lottery/getLotteryInfoWeb?'
         for room in rooms_li:
             room.strip()
             room_id, u_id, room_block = room.split(' ')[0],room.split(' ')[1],room.split(' ')[2]
+            if room_block.strip() in [block2]:
+                continue
             sub_pocket_url = base_pocket_url+f'roomid={room_id}' 
             yield Request(url=sub_pocket_url,callback=self.pocket_parse,cb_kwargs={'block': room_block,'roomid':room_id, 'uid': u_id})  # 设置代理        
 
