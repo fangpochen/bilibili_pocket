@@ -13,13 +13,15 @@ class RoomInfoSpider(scrapy.Spider):
     def start_requests(self):
         with open('../RoomsId_during.txt', 'r') as f:
             rooms_li = f.readlines()
-        block1 = ['xuni', 'diantai']  # roominfo_b1 负责两个热门区域
-        base_pocket_url = 'https://api.live.bilibili.com/xlive/lottery-interface/v1/lottery/getLotteryInfoWeb?'
+        b1rooms_li = []
         for room in rooms_li:
+            if 'xuni' in room or 'diantai' in room:
+                b1rooms_li.append(room)
+        print(b1rooms_li)
+        base_pocket_url = 'https://api.live.bilibili.com/xlive/lottery-interface/v1/lottery/getLotteryInfoWeb?'
+        for room in b1rooms_li:
             room.strip()
             room_id, u_id, room_block = room.split(' ')[0],room.split(' ')[1],room.split(' ')[2]
-            if room_block.strip() not in [block1]:
-                continue
             sub_pocket_url = base_pocket_url+f'roomid={room_id}' 
             yield Request(url=sub_pocket_url,callback=self.pocket_parse,cb_kwargs={'block': room_block,'roomid':room_id, 'uid': u_id})  # 设置代理        
 

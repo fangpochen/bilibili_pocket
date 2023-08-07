@@ -9,7 +9,7 @@ def start_collect_pocket():
         os.chdir(os.path.dirname(os.path.abspath(__file__)))
         sys.path.append(os.path.dirname(os.path.abspath(__file__)))
         try:
-            subprocess.call(['scrapy', 'crawl', 'roominfo'])
+            subprocess.call(['scrapy', 'crawl', 'roominfo_b1'])
         except SystemExit as e:
             print("Scrapy process exited with code:", e.code)
         time.sleep(10)
