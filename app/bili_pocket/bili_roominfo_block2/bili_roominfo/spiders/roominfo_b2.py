@@ -17,7 +17,7 @@ class RoomInfoSpider(scrapy.Spider):
         for room in rooms_li:
             if ('xuni' not in room) and ('diantai' not in room):
                 b2rooms_li.append(room)
-        print('该分区个数:',len(b2rooms_li),b2rooms_li)
+        # print('该分区个数:',len(b2rooms_li),b2rooms_li)
         base_pocket_url = 'https://api.live.bilibili.com/xlive/lottery-interface/v1/lottery/getLotteryInfoWeb?'
         for room in b2rooms_li:
             room.strip()

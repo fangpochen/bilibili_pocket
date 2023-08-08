@@ -54,6 +54,7 @@ class MyView(BaseView):
                 'total_p': pocket.total_p
                 # 添加其他属性
             })
+        print(len(pocket_data))
         return jsonify(pocket_data)
 
     @expose("/tian/", methods=["GET"])

@@ -14,7 +14,7 @@ def start_collect_room_id():
             subprocess.call(['scrapy', 'crawl', 'roomid'])
         except SystemExit as e:
             print("Scrapy process exited with code:", e.code)
-        time.sleep(60)
+        time.sleep(10)
 
 
 if __name__ == '__main__':

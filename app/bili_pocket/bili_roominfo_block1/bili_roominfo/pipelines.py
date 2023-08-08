@@ -30,6 +30,7 @@ class BiliRoomInfoPipeline:
                 (room_id, price, total_p, leave_time, update_time, end_time))
             self.conn.commit()
         except Exception as e:
+            # pass
             print(room_id, e)
 
     def save_tian_item(self, room_id, price, total_p, leave_time, update_time, end_time):
@@ -40,6 +41,7 @@ class BiliRoomInfoPipeline:
                 (room_id, price, total_p, leave_time, update_time, end_time))
             self.conn.commit()
         except Exception as e:
+            # pass
             print(room_id, e)
 
     def close_spider(self, spider):
@@ -53,7 +55,7 @@ class BiliRoomInfoPipeline:
             end_time = update_time + delta
             room_id = pocket[5].replace('https://live.bilibili.com/', '')
             self.save_item(room_id, pocket[3], pocket[7], pocket[0], update_time, end_time)
-            print('最终红包信息-----------------', pocket)
+            # print('最终红包信息-----------------', pocket)
         print('总共有这么多红包:',len(self.pocket_li))
 
         # tian_arr = []
@@ -62,7 +64,7 @@ class BiliRoomInfoPipeline:
             end_time = update_time + delta
             room_id = tian[5].replace('https://live.bilibili.com/', '')
             self.save_tian_item(room_id, tian[2], tian[7], tian[0], update_time, end_time)
-            print('最终天选信息-----------------', tian)
+            # print('最终天选信息-----------------', tian)
         print('总共有这么多天选:',len(self.tianxuan_li))
         # save_list(tian_arr)
         self.conn.close()
@@ -72,7 +74,7 @@ class BiliRoomInfoPipeline:
         self.block = item.get('room_block', '')
         self.roomid = item.get('room_id', '')
         self.person_num = item.get('person_num', '')['onlineNum']  # 在线人数
-        print('-------------------在线人数', self.person_num)
+        # print('-------------------在线人数', self.person_num)
         self.cur_url = self.base_url + str(self.roomid)
         if self.pocket_info.get('popularity_red_pocket'):
             popul_pocket = self.get_popular_pocket()
