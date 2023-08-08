@@ -30,8 +30,11 @@ class BiliRoomInfoPipeline:
                 (room_id, price, total_p, leave_time, update_time, end_time))
             self.conn.commit()
         except Exception as e:
-            # pass
-            print(room_id, e)
+            self.cursor.execute(
+                "UPDATE pocket SET price = ?, total_p = ?, leave_time = ?, update_time = ?, end_time = ? WHERE room_id = ?",
+                (price, total_p, leave_time, update_time, end_time, room_id)
+            )
+            self.conn.commit()
 
     def save_tian_item(self, room_id, price, total_p, leave_time, update_time, end_time):
         # 执行插入操作
@@ -41,8 +44,11 @@ class BiliRoomInfoPipeline:
                 (room_id, price, total_p, leave_time, update_time, end_time))
             self.conn.commit()
         except Exception as e:
-            # pass
-            print(room_id, e)
+            self.cursor.execute(
+                "UPDATE tian SET price = ?, total_p = ?, leave_time = ?, update_time = ?, end_time = ? WHERE room_id = ?",
+                (price, total_p, leave_time, update_time, end_time, room_id)
+            )
+            self.conn.commit()
 
     def close_spider(self, spider):
         # print(self.blocknumdict)
