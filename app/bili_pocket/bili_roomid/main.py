@@ -1,3 +1,4 @@
+import datetime
 import os
 import subprocess
 import sys
@@ -9,11 +10,11 @@ def start_collect_room_id():
         os.chdir(os.path.dirname(os.path.abspath(__file__)))
         sys.path.append(os.path.dirname(os.path.abspath(__file__)))
         try:
-            print(11111111111)
+            print(datetime.datetime.now())
             subprocess.call(['scrapy', 'crawl', 'roomid'])
         except SystemExit as e:
             print("Scrapy process exited with code:", e.code)
-        time.sleep(300)
+        time.sleep(60)
 
 
 if __name__ == '__main__':
