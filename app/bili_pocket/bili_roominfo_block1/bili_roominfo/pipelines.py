@@ -17,7 +17,7 @@ class BiliRoomInfoPipeline:
         self.pocket_li = []
         self.tianxuan_li = []
         self.base_url = 'https://live.bilibili.com/'
-        basedir = os.path.abspath(os.path.dirname(__file__)).replace("\\app\\bili_pocket\\bili_roominfo\\bili_roominfo",
+        basedir = os.path.abspath(os.path.dirname(__file__)).replace("\\app\\bili_pocket\\bili_roominfo_block1\\bili_roominfo",
                                                                      "")
         self.conn = sqlite3.connect(os.path.join(basedir, "app.db"))
         self.cursor = self.conn.cursor()
