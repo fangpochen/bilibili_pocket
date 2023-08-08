@@ -14,7 +14,7 @@ class RoomIdSpider(scrapy.Spider):
         base_url = 'https://api.live.bilibili.com/xlive/web-interface/v1/second/getList?platform=web&parent_area_id='
         block = {'xuni':f'{base_url}9&area_id=0&sort_type=sort_type_291&page',
                 'diantai':f'{base_url}5&area_id=0&sort_type=sort_type_225&page',
-                'yuele':f'{base_url}1&area_id=0&sort_type=sort_type_152&page',
+                'yule':f'{base_url}1&area_id=0&sort_type=sort_type_212&page',
                 'gouwu':f'{base_url}300&area_id=0&sort_type=online&page',
                 'danji':f'{base_url}6&area_id=0&sort_type=sort_type_150&page',
                 'saishi':f'{base_url}13&area_id=0&sort_type=online&page',
@@ -26,7 +26,7 @@ class RoomIdSpider(scrapy.Spider):
         #      'danji':f'{base_url}6&area_id=0&sort_type=sort_type_150&page'}        
         for key,val in block.items():
             url = val
-            if key in ['xuni','yuele', 'diantai']:
+            if key in ['xuni','yule', 'diantai']:
                 for page in range(1,80):
                     page_str = f'={page}'
                     sub_url = url+page_str
