@@ -17,7 +17,7 @@ class RoomInfoSpider(scrapy.Spider):
         for room in rooms_li:
             if ('xuni' not in room) and ('diantai' not in room):
                 b2rooms_li.append(room)
-        print(b2rooms_li)
+        print('该分区个数:',len(b2rooms_li))
         base_pocket_url = 'https://api.live.bilibili.com/xlive/lottery-interface/v1/lottery/getLotteryInfoWeb?'
         for room in b2rooms_li:
             room.strip()
@@ -31,14 +31,18 @@ class RoomInfoSpider(scrapy.Spider):
         roomid = kwargs['roomid']
         sel = Selector(response).extract()
         data = sel.get('data', '')
-        roominfo_item = BiliRoomInfoItem()
-        roominfo_item['pocket_info'] = data
-        roominfo_item['room_block'] = block
-        roominfo_item['room_id'] = roomid
+        if not data.get('popularity_red_pocket') and not data.get('anchor'):
+            return
+        else:
+            print(data)
+            roominfo_item = BiliRoomInfoItem()
+            roominfo_item['pocket_info'] = data
+            roominfo_item['room_block'] = block
+            roominfo_item['room_id'] = roomid
 
-        base_person_num_url = 'https://api.live.bilibili.com/xlive/general-interface/v1/rank/getOnlineGoldRank?'
-        sub_uid_url = base_person_num_url+f'ruid={u_id}&roomId={roomid}&page=1&pageSize=50'
-        yield  Request(url=sub_uid_url,callback=self.personnum_parse,cb_kwargs={'roominfo_item': roominfo_item})  # 设置代理   
+            base_person_num_url = 'https://api.live.bilibili.com/xlive/general-interface/v1/rank/getOnlineGoldRank?'
+            sub_uid_url = base_person_num_url+f'ruid={u_id}&roomId={roomid}&page=1&pageSize=50'
+            yield  Request(url=sub_uid_url,callback=self.personnum_parse,cb_kwargs={'roominfo_item': roominfo_item})  # 设置代理   
     
     def personnum_parse(self, response: HtmlResponse, **kwargs):
         roominfo_item = kwargs['roominfo_item']

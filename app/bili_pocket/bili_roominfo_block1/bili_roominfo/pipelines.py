@@ -54,6 +54,7 @@ class BiliRoomInfoPipeline:
             room_id = pocket[5].replace('https://live.bilibili.com/', '')
             self.save_item(room_id, pocket[3], pocket[7], pocket[0], update_time, end_time)
             print('最终红包信息-----------------', pocket)
+        print('总共有这么多天选:',len(self.pocket_li))
 
         # tian_arr = []
         for tian in self.tianxuan_li:
@@ -62,6 +63,7 @@ class BiliRoomInfoPipeline:
             room_id = tian[5].replace('https://live.bilibili.com/', '')
             self.save_tian_item(room_id, tian[2], tian[7], tian[0], update_time, end_time)
             print('最终天选信息-----------------', tian)
+        print('总共有这么多天选:',len(self.tianxuan_li))
         # save_list(tian_arr)
         self.conn.close()
 
