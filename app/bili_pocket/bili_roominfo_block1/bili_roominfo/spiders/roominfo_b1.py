@@ -17,7 +17,7 @@ class RoomInfoSpider(scrapy.Spider):
         for room in rooms_li:
             if 'xuni' in room or 'diantai' in room:
                 b1rooms_li.append(room)
-        print('该分区个数:',len(b1rooms_li))
+        print('该分区个数:',len(b1rooms_li),b1rooms_li)
         base_pocket_url = 'https://api.live.bilibili.com/xlive/lottery-interface/v1/lottery/getLotteryInfoWeb?'
         for room in b1rooms_li:
             room.strip()
@@ -34,7 +34,6 @@ class RoomInfoSpider(scrapy.Spider):
         if not data.get('popularity_red_pocket') and not data.get('anchor'):
             return
         else:
-            print(data)
             roominfo_item = BiliRoomInfoItem()
             roominfo_item['pocket_info'] = data
             roominfo_item['room_block'] = block

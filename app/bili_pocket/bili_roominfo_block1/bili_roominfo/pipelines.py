@@ -54,7 +54,7 @@ class BiliRoomInfoPipeline:
             room_id = pocket[5].replace('https://live.bilibili.com/', '')
             self.save_item(room_id, pocket[3], pocket[7], pocket[0], update_time, end_time)
             print('最终红包信息-----------------', pocket)
-        print('总共有这么多天选:',len(self.pocket_li))
+        print('总共有这么多红包:',len(self.pocket_li))
 
         # tian_arr = []
         for tian in self.tianxuan_li:
