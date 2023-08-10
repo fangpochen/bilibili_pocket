@@ -30,7 +30,7 @@ class RoomInfoSpider(scrapy.Spider):
         block = kwargs['block']
         roomid = kwargs['roomid']
         sel = Selector(response).extract()
-        print('----------------------------------',sel)
+        # print('----------------------------------',sel)
         data = sel.get('data', '')
         if not data.get('popularity_red_pocket') and not data.get('anchor'):
             return
