@@ -17,8 +17,9 @@ class BiliRoomInfoPipeline:
         self.pocket_li = []
         self.tianxuan_li = []
         self.base_url = 'https://live.bilibili.com/'
-        basedir = os.path.abspath(os.path.dirname(__file__)).replace("\\app\\bili_pocket\\bili_roominfo_block1\\bili_roominfo",
-                                                                     "")
+        basedir = os.path.abspath(os.path.dirname(__file__)).replace(
+            "\\app\\bili_pocket\\bili_roominfo_block1\\bili_roominfo",
+            "")
         self.conn = sqlite3.connect(os.path.join(basedir, "app.db"))
         self.cursor = self.conn.cursor()
 
@@ -57,12 +58,12 @@ class BiliRoomInfoPipeline:
         # pocket_arr = []
         update_time = datetime.datetime.now()
         for pocket in self.pocket_li:
-            delta = datetime.timedelta(seconds=pocket[0])
-            end_time = update_time + delta
+            # delta = datetime.timedelta(seconds=pocket[0])
+            end_time = datetime.datetime.fromtimestamp(pocket[8])
             room_id = pocket[5].replace('https://live.bilibili.com/', '')
             self.save_item(room_id, pocket[3], pocket[7], pocket[0], update_time, end_time)
             # print('最终红包信息-----------------', pocket)
-        print('总共有这么多红包:',len(self.pocket_li))
+        print('总共有这么多红包:', len(self.pocket_li))
 
         # tian_arr = []
         for tian in self.tianxuan_li:
@@ -71,7 +72,7 @@ class BiliRoomInfoPipeline:
             room_id = tian[5].replace('https://live.bilibili.com/', '')
             self.save_tian_item(room_id, tian[2], tian[7], tian[0], update_time, end_time)
             # print('最终天选信息-----------------', tian)
-        print('总共有这么多天选:',len(self.tianxuan_li))
+        print('总共有这么多天选:', len(self.tianxuan_li))
         # save_list(tian_arr)
         self.conn.close()
 
@@ -122,7 +123,7 @@ class BiliRoomInfoPipeline:
         diff = dt2 - dt1  # 计算时间差
         leave_time = diff.total_seconds()
         yield_pocketinfo = [leave_time, join_requirement, wait_num, total_price, sub_gift_li, self.cur_url,
-                            self.block, self.person_num]  # 剩余时间、等级需要、等待第几个红包、总价值、礼物列表,地址、分区
+                            self.block, self.person_num, remove_time]  # 剩余时间、等级需要、等待第几个红包、总价值、礼物列表,地址、分区
         if join_requirement > 1:  # 如果要求的等级高 或者红包不是当前红包 则略过
             return
         else:
