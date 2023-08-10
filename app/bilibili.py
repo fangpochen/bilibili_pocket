@@ -50,10 +50,11 @@ class MyView(BaseView):
                 'room_id': pocket.room_id,
                 'price': pocket.price,
                 'leave_time': pocket.leave_time,
-                'end_time': pocket.end_time,
+                'end_time': pocket.end_time.timestamp(),
                 'total_p': pocket.total_p
                 # 添加其他属性
             })
+        print(len(pocket_data))
         return jsonify(pocket_data)
 
     @expose("/tian/", methods=["GET"])
@@ -67,7 +68,7 @@ class MyView(BaseView):
                 'room_id': pocket.room_id,
                 'price': pocket.price,
                 'leave_time': pocket.leave_time,
-                'end_time': pocket.end_time,
+                'end_time': pocket.end_time.timestamp(),
                 'total_p': pocket.total_p
                 # 添加其他属性
             })

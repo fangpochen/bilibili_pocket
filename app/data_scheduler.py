@@ -48,7 +48,7 @@ class Config(object):
             'id': 'job3',
             'func': 'app.data_scheduler:delete_expired_room_info',
             'trigger': 'interval',  # 指定任务触发器 interval
-            'minutes': 2
+            'seconds': 5
         },
         # {
         #     'id': 'job4',
