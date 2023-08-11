@@ -48,7 +48,7 @@ class RoomIdSpider(scrapy.Spider):
                 pendant_info = roominfo.get('pendant_info', '')
                 if pendant_info:
                     hongbao_tianxuan_info = str(pendant_info)  # 把字典转成字符串
-                    print(hongbao_tianxuan_info)
+                    # print(hongbao_tianxuan_info)
                     if '红包' in hongbao_tianxuan_info:
                         if_pocket = True
                     if '天选' in hongbao_tianxuan_info:
