@@ -2,7 +2,8 @@
 #
 # See documentation in:
 # https://docs.scrapy.org/en/latest/topics/spider-middleware.html
-
+import time
+import random
 from scrapy import signals
 
 # useful for handling different item types with a single interface
@@ -60,6 +61,8 @@ class BiliRoomidDownloaderMiddleware:
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the downloader middleware does not modify the
     # passed objects.
+    def __init__(self) -> None:
+        self.delay_times = 1
 
     @classmethod
     def from_crawler(cls, crawler):
@@ -69,6 +72,11 @@ class BiliRoomidDownloaderMiddleware:
         return s
 
     def process_request(self, request, spider):
+        print('downloadmidware 触发')
+        self.delay_times +=1
+        if self.delay_times%80 == 0:
+            print(self.delay_times,'触发休息等待，等待1-5s')
+            time.sleep(random.uniform(1,5))
         # Called for each request that goes through the downloader
         # middleware.
 
