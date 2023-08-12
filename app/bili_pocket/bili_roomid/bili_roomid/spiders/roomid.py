@@ -58,6 +58,7 @@ class RoomIdSpider(scrapy.Spider):
                     room_item['roomid'] = roominfo.get('roomid', '')
                     room_item['uid'] = roominfo.get('uid', '')
                     room_item['roomblock'] = block
+                    room_item['online_person'] = roominfo.get('watched_show').get('num')
                     yield room_item
         else:
             return

@@ -16,7 +16,8 @@ class BiliRoomIdPipeline:
         roomid = item.get('roomid','')
         roomblock = item.get('roomblock','')
         uid = item.get('uid','')
-        self.rooms_li.append(str(roomid)+' '+ str(uid) + ' ' + roomblock + '\n')
+        num_online_person = str(item.get('online_person',''))
+        self.rooms_li.append(str(roomid)+' '+ str(uid) + ' ' + roomblock + ' ' + num_online_person + '\n')
         return item
     
     def _deldupliroom(self, room_li):

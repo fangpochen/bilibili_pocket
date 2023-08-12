@@ -9,4 +9,5 @@ class BiliRoomIdItem(scrapy.Item):
     roomid = scrapy.Field()
     uid = scrapy.Field()
     roomblock =  scrapy.Field()
+    online_person = scrapy.Field()
 
