@@ -1,3 +1,7 @@
+import copy
+import os
+import sqlite3
+
 import scrapy
 from fake_useragent import UserAgent
 from scrapy import Selector, Request
@@ -12,17 +16,39 @@ class RoomInfoSpider(scrapy.Spider):
     start_urls = ["https://live.bilibili.com/p/eden/"]
 
     def start_requests(self):
-        with open('../RoomsId_during.txt', 'r') as f:
-            rooms_li = f.readlines()
-        # b1rooms_li = []
-        # for room in rooms_li:
-        # if 'xuni' in room or 'diantai' in room:
-        #     b1rooms_li.append(room)
-        # print('该分区个数:',len(b1rooms_li),b1rooms_li)
+        basedir = os.path.abspath(os.path.dirname(__file__)).replace(
+            "\\app\\bili_pocket\\bili_roominfo_block1\\bili_roominfo\\spiders",
+            "")
+        conn = sqlite3.connect(os.path.join(basedir, "app.db"))
+        cursor = conn.cursor()
+        query = "SELECT * FROM room"
+        cursor.execute(query)
+        results = cursor.fetchall()
+        rooms = copy.deepcopy(results)
+        query = "SELECT * FROM pocket"
+        cursor.execute(query)
+        pocket = cursor.fetchall()
+        # 创建一个新的列表用于存储过滤后的rooms
+        filtered_rooms = []
+
+        # 遍历rooms
+        for room in rooms:
+            room_id = room[2]  # 获取room_id
+
+            # 检查rooms中的room_id是否存在于pocket中
+            exists_in_pocket = any(room_id == pocket_row[0] for pocket_row in pocket)
+
+            # 如果room_id不存在于pocket中，则将该元素添加到filtered_rooms中
+            if not exists_in_pocket:
+                filtered_rooms.append(room)
+
+        # # 打印过滤后的rooms
+        # for room in filtered_rooms:
+        #     print(room)
         base_pocket_url = 'https://api.live.bilibili.com/xlive/lottery-interface/v1/lottery/getLotteryInfoWeb?'
-        for room in rooms_li:
-            room.strip()
-            room_id, u_id, room_block = room.split(' ')[0], room.split(' ')[1], room.split(' ')[2]
+        for room in filtered_rooms:
+            # room.strip()
+            room_id, u_id, room_block = room[2], room[1], room[4]
             sub_pocket_url = base_pocket_url + f'roomid={room_id}'
             user_agent = UserAgent()
             headers = {'User-Agent': user_agent.random}

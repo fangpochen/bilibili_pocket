@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from flask_appbuilder import Model
-from sqlalchemy import Column, Integer, String, DateTime, Float
+from sqlalchemy import Column, Integer, String, DateTime, Float, Boolean
 
 """
 
@@ -36,6 +36,24 @@ class Phone(Model):
 
     def __repr__(self):
         return "<Phone %r>" % self.name
+
+
+# 直播间
+class Room(Model):
+    __tablename__ = "room"
+    id = Column(Integer, primary_key=True)  # 编号
+    uuid = Column(String(200))  # uuid
+    room_id = Column(String(200), unique=True)  # 房间号
+    roomblock = Column(String(200))  # 分区
+    total_p = Column(Integer)  # 在线人数
+    is_pocket = Column(Boolean)  # 是否有红包
+    is_tian = Column(Boolean)  # 是否有天选
+    leave_time = Column(Integer)  # 剩余秒数
+    update_time = Column(DateTime, index=True, default=datetime.now)  # 更新时间
+    end_time = Column(DateTime, index=True, default=datetime.now)  # 结束时间
+
+    def __repr__(self):
+        return "<Room %r>" % self.name
 
 
 # 红包

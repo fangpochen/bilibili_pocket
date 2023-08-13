@@ -45,6 +45,7 @@ class RoomIdSpider(scrapy.Spider):
         if rooms_li:
             for roominfo in rooms_li:
                 if_pocket = False
+                if_tian = False
                 pendant_info = roominfo.get('pendant_info', '')
                 if pendant_info:
                     hongbao_tianxuan_info = str(pendant_info)  # 把字典转成字符串
@@ -52,13 +53,15 @@ class RoomIdSpider(scrapy.Spider):
                     if '红包' in hongbao_tianxuan_info:
                         if_pocket = True
                     if '天选' in hongbao_tianxuan_info:
-                        if_pocket = True
-                if if_pocket:
+                        if_tian = True
+                if if_pocket or if_tian:
                     room_item = BiliRoomIdItem()
                     room_item['roomid'] = roominfo.get('roomid', '')
                     room_item['uid'] = roominfo.get('uid', '')
                     room_item['roomblock'] = block
                     room_item['online_person'] = roominfo.get('watched_show').get('num')
+                    room_item['if_pocket'] = if_pocket
+                    room_item['if_tian'] = if_tian
                     yield room_item
         else:
             return

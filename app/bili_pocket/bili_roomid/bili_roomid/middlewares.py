@@ -72,10 +72,10 @@ class BiliRoomidDownloaderMiddleware:
         return s
 
     def process_request(self, request, spider):
-        print('downloadmidware 触发')
+        # print('downloadmidware 触发')
         self.delay_times +=1
         if self.delay_times%80 == 0:
-            print(self.delay_times,'触发休息等待，等待1-5s')
+            # print(self.delay_times,'触发休息等待，等待1-5s')
             time.sleep(random.uniform(1,5))
         # Called for each request that goes through the downloader
         # middleware.

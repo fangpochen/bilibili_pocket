@@ -81,11 +81,11 @@ class BiliRoominfoDownloaderMiddleware:
         return s
 
     def process_request(self, request, spider):
-        print('downloadmidware 触发')
+        # print('downloadmidware 触发')
         self.delay_times +=1
-        if self.delay_times%20 == 0:
-            print(self.delay_times,'触发休息等待，等待3-5s')
-            time.sleep(random.uniform(1,5))
+        if self.delay_times%30 == 0:
+            # print(self.delay_times,'触发休息等待，等待3-5s')
+            time.sleep(3)
         # Called for each request that goes through the downloader
         # middleware.
 

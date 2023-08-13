@@ -1,6 +1,5 @@
 import datetime
 import json
-import logging
 
 import requests
 from flask import request, jsonify
@@ -81,15 +80,15 @@ class MyView(BaseView):
         phone = db.session.query(Phone).filter(Phone.state == 0, now_time < Phone.end_time).first()
         phone.state = 1
         phone.update_time = now_time
+        number = phone.phone
         print(phone.phone)
         db.session.commit()
         db.session.close()
-        return phone.phone
+        return number
 
     @expose("/phonesms/", methods=["GET"])
     @has_access
     def phonesms(self, *args):
-        params = request.get_json()
         phone = request.args.get('phone')
         return get_bilibili_sms(phone)
 
@@ -107,10 +106,11 @@ def get_bilibili_sms(phone_num):
         for i in data:
             content = i['content']
             if phone_num[-4:] == i['simnum'][-4:]:
-                if "验证码" in content:
-                    return content[9:15]
+                if "【哔哩哔哩】验证码" in content:
+                    index = content.find("验证码")
+                    return content[index+3:index + 9]
     except Exception as err:
-        logging.Logger.info(err)
+        print(err)
     return ''
 
 
