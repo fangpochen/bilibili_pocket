@@ -62,17 +62,18 @@ class RoomInfoSpider(scrapy.Spider):
 
         for room in new_filtered_rooms:
             # room.strip()
-            room_id, u_id, room_block = room[2], room[1], room[4]
+            room_id, u_id, room_block, online_p = room[2], room[1], room[4], room[0]  # 更改
             sub_pocket_url = base_pocket_url + f'roomid={room_id}'
             user_agent = UserAgent()
             headers = {'User-Agent': user_agent.random}
             yield Request(url=sub_pocket_url, headers=headers, callback=self.pocket_parse,
-                          cb_kwargs={'block': room_block, 'roomid': room_id, 'uid': u_id})  # 设置代理
+                          cb_kwargs={'block': room_block, 'roomid': room_id, 'uid': u_id, 'online_p':online_p})  # 设置代理
 
     def pocket_parse(self, response: HtmlResponse, **kwargs):
         u_id = kwargs['uid']
         block = kwargs['block']
         roomid = kwargs['roomid']
+        online_p = kwargs['online_p']   # 更改
         sel = Selector(response).extract()
         # print('----------------------------------',sel)
         data = sel.get('data', '')
@@ -83,15 +84,16 @@ class RoomInfoSpider(scrapy.Spider):
             roominfo_item['pocket_info'] = data
             roominfo_item['room_block'] = block
             roominfo_item['room_id'] = roomid
+            roominfo_item['person_num'] = online_p   # 更改
+            yield roominfo_item
+    #         base_person_num_url = 'https://api.live.bilibili.com/xlive/general-interface/v1/rank/getOnlineGoldRank?'
+    #         sub_uid_url = base_person_num_url + f'ruid={u_id}&roomId={roomid}&page=1&pageSize=50'
+    #         yield Request(url=sub_uid_url, callback=self.personnum_parse,
+    #                       cb_kwargs={'roominfo_item': roominfo_item})  # 设置代理
 
-            base_person_num_url = 'https://api.live.bilibili.com/xlive/general-interface/v1/rank/getOnlineGoldRank?'
-            sub_uid_url = base_person_num_url + f'ruid={u_id}&roomId={roomid}&page=1&pageSize=50'
-            yield Request(url=sub_uid_url, callback=self.personnum_parse,
-                          cb_kwargs={'roominfo_item': roominfo_item})  # 设置代理
-
-    def personnum_parse(self, response: HtmlResponse, **kwargs):
-        roominfo_item = kwargs['roominfo_item']
-        sel = Selector(response).extract()
-        personnum_data = sel.get('data', '')
-        roominfo_item['person_num'] = personnum_data
-        yield roominfo_item
+    # def personnum_parse(self, response: HtmlResponse, **kwargs):
+    #     roominfo_item = kwargs['roominfo_item']
+    #     sel = Selector(response).extract()
+    #     personnum_data = sel.get('data', '')
+    #     roominfo_item['person_num'] = personnum_data
+    #     yield roominfo_item
