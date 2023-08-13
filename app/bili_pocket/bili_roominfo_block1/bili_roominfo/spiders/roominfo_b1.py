@@ -56,13 +56,13 @@ class RoomInfoSpider(scrapy.Spider):
                 new_filtered_rooms.append(room)
         # # 打印过滤后的rooms
         print('打印过滤后的rooms:', len(new_filtered_rooms))
-        for room in new_filtered_rooms:
-            print(room)
+        # for room in new_filtered_rooms:
+        #     print(room)
         base_pocket_url = 'https://api.live.bilibili.com/xlive/lottery-interface/v1/lottery/getLotteryInfoWeb?'
 
         for room in new_filtered_rooms:
             # room.strip()
-            room_id, u_id, room_block, online_p = room[2], room[1], room[4], room[0]  # 更改
+            room_id, u_id, room_block, online_p = room[2], room[1], room[3], room[4]  # 更改
             sub_pocket_url = base_pocket_url + f'roomid={room_id}'
             user_agent = UserAgent()
             headers = {'User-Agent': user_agent.random}

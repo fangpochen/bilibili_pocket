@@ -80,7 +80,7 @@ class BiliRoomInfoPipeline:
         self.pocket_info = item.get('pocket_info', '')
         self.block = item.get('room_block', '')
         self.roomid = item.get('room_id', '')
-        self.person_num = item.get('person_num', '')['onlineNum']  # 在线人数
+        self.person_num = item.get('person_num', '')  # 在线人数
         # print('-------------------在线人数', self.person_num)
         self.cur_url = self.base_url + str(self.roomid)
         if self.pocket_info.get('popularity_red_pocket'):
