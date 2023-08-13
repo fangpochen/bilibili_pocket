@@ -3,7 +3,7 @@ from datetime import datetime
 from random import randint
 
 from app import db
-from app.models import Phone, Pocket, Tian
+from app.models import Phone, Pocket, Tian, Room
 from app.mysql_util import save_list
 
 pocket = 'None'
@@ -111,6 +111,7 @@ def delete_expired_room_info():
     now_time = datetime.now()
     db.session.query(Pocket).filter(now_time > Pocket.end_time).delete()
     db.session.query(Tian).filter(now_time > Tian.end_time).delete()
+    db.session.query(Room).filter(now_time > Room.end_time).delete()
     db.session.commit()
     db.session.close()
 

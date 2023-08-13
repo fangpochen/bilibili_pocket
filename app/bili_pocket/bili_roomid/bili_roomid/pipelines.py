@@ -23,20 +23,19 @@ class BiliRoomIdPipeline:
         total_p = int(kwargs.get("total_p"))
         leave_time = 0
         update_time = datetime.datetime.now()
-        # end_time = update_time + datetime.timedelta(seconds=180)
-        query = "INSERT INTO room (room_id, uuid, roomblock, is_pocket, is_tian, total_p, leave_time, update_time) VALUES (?, ?, ?, ?, ?, ?, ?, ? )"
-        values = (room_id, uuid, roomblock, is_pocket, is_tian, total_p, leave_time, update_time)
+        end_time = update_time + datetime.timedelta(seconds=180)
+        query = "INSERT INTO room (room_id, uuid, roomblock, is_pocket, is_tian, total_p, leave_time, update_time,end_time) VALUES (?, ?, ?, ?, ?, ?, ?, ? ,?)"
+        values = (room_id, uuid, roomblock, is_pocket, is_tian, total_p, leave_time, update_time, end_time)
         try:
             self.cursor.execute(query, values)
             self.conn.commit()
             print(1111111)
         except Exception as e:
-            query = "UPDATE room SET uuid = ?, roomblock = ?, is_pocket = ?, is_tian = ?, total_p = ?, leave_time = ?, update_time = ? WHERE room_id = ?"
-            values = (uuid, roomblock, is_pocket, is_tian, total_p, leave_time, update_time, room_id)
+            query = "UPDATE room SET uuid = ?, roomblock = ?, is_pocket = ?, is_tian = ?, total_p = ?, leave_time = ?, update_time = ?, end_time = ? WHERE room_id = ?"
+            values = (uuid, roomblock, is_pocket, is_tian, total_p, leave_time, update_time, end_time, room_id)
             self.cursor.execute(query, values)
             self.conn.commit()
             print(222222222)
-
 
     def close_spider(self, spider):
         # self.rooms_li = self._deldupliroom(self.rooms_li)
