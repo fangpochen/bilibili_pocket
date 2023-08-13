@@ -23,7 +23,7 @@ class BiliRoomIdPipeline:
         total_p = int(kwargs.get("total_p"))
         leave_time = 0
         update_time = datetime.datetime.now()
-        end_time = update_time + datetime.timedelta(seconds=60)
+        end_time = update_time + datetime.timedelta(seconds=30)
         query = "INSERT INTO room (room_id, uuid, roomblock, is_pocket, is_tian, total_p, leave_time, update_time,end_time) VALUES (?, ?, ?, ?, ?, ?, ?, ? ,?)"
         values = (room_id, uuid, roomblock, is_pocket, is_tian, total_p, leave_time, update_time, end_time)
         try:

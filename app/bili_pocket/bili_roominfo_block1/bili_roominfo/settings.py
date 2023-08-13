@@ -22,7 +22,7 @@ USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Ge
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 CONCURRENT_REQUESTS = 512
 LOG_LEVEL = 'WARNING'
-
+COOKIE_URL = 'https://api.live.bilibili.com/area/dynamic?area=all'
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
@@ -54,6 +54,7 @@ DOWNLOAD_RANDOMIZE_DELAY = True
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
     'bili_roominfo.middlewares.ProxyDownloaderMiddleware': 100,
+    # 'bili_roominfo.cookiemiddleware.CookieMiddleware': 700,
     "bili_roominfo.middlewares.BiliRoominfoDownloaderMiddleware": 543,
 }
 

@@ -70,6 +70,7 @@ class RoomInfoSpider(scrapy.Spider):
                           cb_kwargs={'block': room_block, 'roomid': room_id, 'uid': u_id, 'online_p':online_p})  # 设置代理
 
     def pocket_parse(self, response: HtmlResponse, **kwargs):
+        print(response.request.cookies)
         u_id = kwargs['uid']
         block = kwargs['block']
         roomid = kwargs['roomid']
