@@ -41,14 +41,26 @@ class RoomInfoSpider(scrapy.Spider):
             # 如果room_id不存在于pocket中，则将该元素添加到filtered_rooms中
             if not exists_in_pocket:
                 filtered_rooms.append(room)
-
-        # # 打印过滤后的rooms
-        print('打印过滤后的rooms')
+        query = "SELECT * FROM tian"
+        cursor.execute(query)
+        new_filtered_rooms = []
+        tians = cursor.fetchall()
         for room in filtered_rooms:
+            room_id = room[2]  # 获取room_id
+
+            # 检查rooms中的room_id是否存在于pocket中
+            exists_in_pocket = any(room_id == tian_row[1] for tian_row in tians)
+
+            # 如果room_id不存在于pocket中，则将该元素添加到filtered_rooms中
+            if not exists_in_pocket:
+                new_filtered_rooms.append(room)
+        # # 打印过滤后的rooms
+        print('打印过滤后的rooms:', len(new_filtered_rooms))
+        for room in new_filtered_rooms:
             print(room)
         base_pocket_url = 'https://api.live.bilibili.com/xlive/lottery-interface/v1/lottery/getLotteryInfoWeb?'
 
-        for room in filtered_rooms:
+        for room in new_filtered_rooms:
             # room.strip()
             room_id, u_id, room_block = room[2], room[1], room[4]
             sub_pocket_url = base_pocket_url + f'roomid={room_id}'
