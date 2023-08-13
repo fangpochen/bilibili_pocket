@@ -2,12 +2,13 @@
 #
 # See documentation in:
 # https://docs.scrapy.org/en/latest/topics/spider-middleware.html
-import time
 import random
+import time
+
 from scrapy import signals
 
+
 # useful for handling different item types with a single interface
-from itemadapter import is_item, ItemAdapter
 
 
 class BiliRoomidSpiderMiddleware:
@@ -73,10 +74,10 @@ class BiliRoomidDownloaderMiddleware:
 
     def process_request(self, request, spider):
         # print('downloadmidware 触发')
-        self.delay_times +=1
-        if self.delay_times%80 == 0:
+        self.delay_times += 1
+        if self.delay_times % 80 == 0:
             # print(self.delay_times,'触发休息等待，等待1-5s')
-            time.sleep(random.uniform(1,5))
+            time.sleep(random.uniform(1, 5))
         # Called for each request that goes through the downloader
         # middleware.
 
@@ -109,3 +110,27 @@ class BiliRoomidDownloaderMiddleware:
 
     def spider_opened(self, spider):
         spider.logger.info("Spider opened: %s" % spider.name)
+
+
+class ProxyDownloaderMiddleware:
+    _proxy = ('o191.kdltps.com', '15818')
+
+    def process_request(self, request, spider):
+        # 用户名密码认证
+        username = "t19190774262146"
+        password = "7a00m1js"
+        request.meta['proxy'] = "http://%(user)s:%(pwd)s@%(proxy)s/" % {"user": username, "pwd": password,
+                                                                        "proxy": ':'.join(
+                                                                            ProxyDownloaderMiddleware._proxy)}
+
+        # 白名单认证
+        # request.meta['proxy'] = "http://%(proxy)s/" % {"proxy": proxy}
+        request.headers["Connection"] = "close"
+        return None
+
+    def process_exception(self, request, exception, spider):
+        """捕获407异常"""
+        if "'status': 407" in exception.__str__():  # 不同版本的exception的写法可能不一样，可以debug出当前版本的exception再修改条件
+            from scrapy.resolver import dnscache
+            dnscache.__delitem__(ProxyDownloaderMiddleware._proxy[0])  # 删除proxy host的dns缓存
+        return exception

@@ -2,22 +2,21 @@
 #
 # See documentation in:
 # https://docs.scrapy.org/en/latest/topics/spider-middleware.html
-import time 
-import random
-
 from scrapy import signals
 # useful for handling different item types with a single interface
-from itemadapter import is_item, ItemAdapter
+
 
 def get_cookies_dict():
     cookies_str = "buvid3=90EADCE7-749E-0E67-0421-9B161EC62B6267771infoc; b_nut=1668864467; _uuid=E9436614-CB9F-1B2A-4C5C-4AB510BF23FB367669infoc; buvid4=6DE1ACFE-2B8D-2536-0F48-0DAC4B03E33469187-022111921-KrU2p7hQ0ITllS54oJlIsA%3D%3D; buvid_fp_plain=undefined; nostalgia_conf=-1; CURRENT_FNVAL=4048; rpdid=|(mmJ)m)u~k0J'uYY))YRYJ~; theme_style=light; i-wanna-go-back=-1; LIVE_BUVID=AUTO3416689545716296; hit-new-style-dyn=0; hit-dyn-v2=1; b_ut=5; home_feed_column=5; CURRENT_PID=3d032de0-d489-11ed-897c-8149aa219e74; theme_style=light; share_source_origin=COPY; FEED_LIVE_VERSION=V8; header_theme_version=CLOSE; CURRENT_QUALITY=0; bsource=search_google; fingerprint=8bae937410920dc95812411a74338e24; innersign=0; bili_jct=9d21775af8aa7d7e85f23afb33f88586; DedeUserID=1625760333; DedeUserID__ckMd5=1d58475273c83513; sid=hnlzhlng; buvid_fp=8bae937410920dc95812411a74338e24; PVID=2; b_lsid=EA1015DDD_189DFC40077; browser_resolution=1920-503"
     cookies_dict = {}
     for item in cookies_str.split('; '):
-        key,value = item.split('=', maxsplit=1)
+        key, value = item.split('=', maxsplit=1)
         cookies_dict[key] = value
     return cookies_dict
 
+
 COOKIES_DICT = get_cookies_dict()
+
 
 class BiliRoominfoSpiderMiddleware:
     # Not all methods need to be defined. If a method is not defined,
@@ -120,3 +119,26 @@ class BiliRoominfoDownloaderMiddleware:
     def spider_opened(self, spider):
         spider.logger.info("Spider opened: %s" % spider.name)
 
+
+class ProxyDownloaderMiddleware:
+    _proxy = ('o191.kdltps.com', '15818')
+
+    def process_request(self, request, spider):
+        # 用户名密码认证
+        username = "t19190774262146"
+        password = "7a00m1js"
+        request.meta['proxy'] = "http://%(user)s:%(pwd)s@%(proxy)s/" % {"user": username, "pwd": password,
+                                                                        "proxy": ':'.join(
+                                                                            ProxyDownloaderMiddleware._proxy)}
+
+        # 白名单认证
+        # request.meta['proxy'] = "http://%(proxy)s/" % {"proxy": proxy}
+        request.headers["Connection"] = "close"
+        return None
+
+    def process_exception(self, request, exception, spider):
+        """捕获407异常"""
+        if "'status': 407" in exception.__str__():  # 不同版本的exception的写法可能不一样，可以debug出当前版本的exception再修改条件
+            from scrapy.resolver import dnscache
+            dnscache.__delitem__(ProxyDownloaderMiddleware._proxy[0])  # 删除proxy host的dns缓存
+        return exception
