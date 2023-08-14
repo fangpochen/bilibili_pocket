@@ -108,12 +108,15 @@ def change_phone_number():  # 一个函数，用来做定时任务的任务。
 
 
 def delete_expired_room_info():
-    now_time = datetime.now()
-    db.session.query(Pocket).filter(now_time > Pocket.end_time).delete()
-    db.session.query(Tian).filter(now_time > Tian.end_time).delete()
-    db.session.query(Room).filter(now_time > Room.end_time).delete()
-    db.session.commit()
-    db.session.close()
+    try:
+        now_time = datetime.now()
+        db.session.query(Pocket).filter(now_time > Pocket.end_time).delete()
+        db.session.query(Tian).filter(now_time > Tian.end_time).delete()
+        db.session.query(Room).filter(now_time > Room.end_time).delete()
+        db.session.commit()
+        db.session.close()
+    except Exception as e:
+        print(e)
 
 
 if __name__ == '__main__':

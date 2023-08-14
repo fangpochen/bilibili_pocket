@@ -20,27 +20,31 @@ class BiliRoomIdPipeline:
         roomblock = kwargs.get("roomblock")
         is_pocket = kwargs.get('if_pocket')
         is_tian = kwargs.get('if_tian')
-        total_p = int(kwargs.get("total_p"))
+        total_p = kwargs.get("total_p")
+        tag = int(kwargs.get("tag"))
         leave_time = 0
         update_time = datetime.datetime.now()
         end_time = update_time + datetime.timedelta(seconds=30)
-        query = "INSERT INTO room (room_id, uuid, roomblock, is_pocket, is_tian, total_p, leave_time, update_time,end_time) VALUES (?, ?, ?, ?, ?, ?, ?, ? ,?)"
-        values = (room_id, uuid, roomblock, is_pocket, is_tian, total_p, leave_time, update_time, end_time)
+        query = "INSERT INTO room (room_id, uuid, roomblock, is_pocket, is_tian, total_p, leave_time, update_time, end_time, tag) VALUES (?, ?, ?, ?, ?, ?, ?, ? ,? ,?)"
+        values = (room_id, uuid, roomblock, is_pocket, is_tian, total_p, leave_time, update_time, end_time, tag)
         try:
             self.cursor.execute(query, values)
             self.conn.commit()
-            # print(1111111)
         except Exception as e:
-            query = "UPDATE room SET uuid = ?, roomblock = ?, is_pocket = ?, is_tian = ?, total_p = ?, leave_time = ?, update_time = ?, end_time = ? WHERE room_id = ?"
-            values = (uuid, roomblock, is_pocket, is_tian, total_p, leave_time, update_time, end_time, room_id)
+            query = "UPDATE room SET uuid = ?, roomblock = ?, is_pocket = ?, is_tian = ?, total_p = ?, leave_time = ?, update_time = ?, end_time = ? , tag=? WHERE room_id = ?"
+            values = (uuid, roomblock, is_pocket, is_tian, total_p, leave_time, update_time, end_time, tag, room_id)
             self.cursor.execute(query, values)
             self.conn.commit()
-            # print(222222222)
 
     def close_spider(self, spider):
-        # self.rooms_li = self._deldupliroom(self.rooms_li)
+        index = len(self.rooms_li) / 2
+        i = 0
+        tag = 0
         for room in self.rooms_li:
-            self.save_room(**room)
+            if i > index:
+                tag = 1
+            self.save_room(tag=tag, **room)
+            i += 1
         # 执行插入操作
 
     def process_item(self, item, spider):

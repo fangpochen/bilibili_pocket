@@ -76,14 +76,18 @@ class MyView(BaseView):
     @expose("/phone/", methods=["GET"])
     @has_access
     def get_phone(self):
-        now_time = datetime.datetime.now()
-        phone = db.session.query(Phone).filter(Phone.state == 0, now_time < Phone.end_time).first()
-        phone.state = 1
-        phone.update_time = now_time
-        number = phone.phone
-        print(phone.phone)
-        db.session.commit()
-        db.session.close()
+        try:
+            now_time = datetime.datetime.now()
+            phone = db.session.query(Phone).filter(Phone.state == 0, now_time < Phone.end_time).first()
+            phone.state = 1
+            phone.update_time = now_time
+            number = phone.phone
+            print(phone.phone)
+            db.session.commit()
+            db.session.close()
+        except Exception as e:
+            print(e)
+            return '联系管理员'
         return number
 
     @expose("/phonesms/", methods=["GET"])

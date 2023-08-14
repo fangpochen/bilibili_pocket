@@ -48,6 +48,7 @@ class Room(Model):
     total_p = Column(Integer)  # 在线人数
     is_pocket = Column(Boolean)  # 是否有红包
     is_tian = Column(Boolean)  # 是否有天选
+    tag = Column(Integer)  # 标签
     leave_time = Column(Integer)  # 剩余秒数
     update_time = Column(DateTime, index=True, default=datetime.now)  # 更新时间
     end_time = Column(DateTime, index=True, default=datetime.now)  # 结束时间
