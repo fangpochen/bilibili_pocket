@@ -88,7 +88,7 @@ class RoomInfoSpider(scrapy.Spider):
             roominfo_item['person_num'] = online_p   # 更改
             yield roominfo_item
     #         base_person_num_url = 'https://api.live.bilibili.com/xlive/general-interface/v1/rank/getOnlineGoldRank?'
-    #         sub_uid_url = base_person_num_url + f'ruid={u_id}&roomId={roomid}&page=1&pageSize=50'
+    #         sub_uid_url = base_person_num_url + f'ruid={u_id}&roomId={roomid}&page=1.txt&pageSize=50'
     #         yield Request(url=sub_uid_url, callback=self.personnum_parse,
     #                       cb_kwargs={'roominfo_item': roominfo_item})  # 设置代理
 

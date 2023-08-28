@@ -101,7 +101,7 @@ class BiliRoomInfoPipeline:
     def get_popular_pocket(self):
         timestamp = time.time()  # 获取当前时间戳
         pop_pocket_info = self.pocket_info['popularity_red_pocket'][0]
-        join_requirement = pop_pocket_info.get('join_requirement')  # 需要的粉丝等级 1 为1级
+        join_requirement = pop_pocket_info.get('join_requirement')  # 需要的粉丝等级 1.txt 为1级
         awards = pop_pocket_info.get('awards')  # 总价值
         start_time = pop_pocket_info.get('start_time')
         end_time = pop_pocket_info.get('end_time')

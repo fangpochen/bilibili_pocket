@@ -22,11 +22,12 @@ class PocketModelView(ModelView):
 
 class PhoneModelView(ModelView):
     datamodel = SQLAInterface(Phone)
-    label_columns = {'phone': '手机号', 'url': '请求url地址', 'state': '状态[0未使用，1已使用]', 'update_time': '更新时间',
+    label_columns = {'phone': '手机号', 'url': '请求url地址', 'state': '状态[0未使用，1已使用]', 'username': '状态[0未使用，1已使用]',
+                     'update_time': '更新时间',
                      'end_time': '结束时间'}
-    list_columns = ["id", "phone", "url", "state", "update_time", "end_time"]
-    add_columns = ["id", "phone", "url", "state", "update_time", "end_time"]
-    edit_columns = ["id", "phone", "url", "state", "update_time", "end_time"]
+    list_columns = ["id", "phone", "url", "state", "username", "update_time", "end_time"]
+    add_columns = ["id", "phone", "url", "state", "username", "update_time", "end_time"]
+    edit_columns = ["id", "phone", "url", "state", "username", "update_time", "end_time"]
     base_order = ("update_time", "asc")
 
 
@@ -77,9 +78,12 @@ class MyView(BaseView):
     @has_access
     def get_phone(self):
         try:
+            req = request.headers
+            username = req.environ['HTTP_USERNAME']
             now_time = datetime.datetime.now()
             phone = db.session.query(Phone).filter(Phone.state == 0, now_time < Phone.end_time).first()
             phone.state = 1
+            phone.username = username
             phone.update_time = now_time
             number = phone.phone
             print(phone.phone)
@@ -112,7 +116,7 @@ def get_bilibili_sms(phone_num):
             if phone_num[-4:] == i['simnum'][-4:]:
                 if "【哔哩哔哩】验证码" in content:
                     index = content.find("验证码")
-                    return content[index+3:index + 9]
+                    return content[index + 3:index + 9]
     except Exception as err:
         print(err)
     return ''

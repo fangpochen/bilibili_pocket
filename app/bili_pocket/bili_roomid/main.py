@@ -13,8 +13,8 @@ def start_collect_room_id():
         sys.path.append(os.path.dirname(os.path.abspath(__file__)))
         try:
             print(datetime.datetime.now())
-            # execute(['scrapy', 'crawl', 'roomid'])
-            subprocess.call(['scrapy', 'crawl', 'roomid'])
+            execute(['scrapy', 'crawl', 'roomid'])
+            # subprocess.call(['scrapy', 'crawl', 'roomid'])
         except SystemExit as e:
             print("Scrapy process exited with code:", e.code)
         # time.sleep(20)

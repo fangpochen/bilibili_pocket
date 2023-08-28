@@ -31,6 +31,7 @@ class Phone(Model):
     phone = Column(String(100), unique=True)  # 手机号
     url = Column(String(200))  # 号码api
     state = Column(Integer)  # 状态 0 未使用 1已使用
+    username = Column(String(200))  # 用户名
     update_time = Column(DateTime, index=True, default=datetime.now)  # 更新时间
     end_time = Column(DateTime, index=True, default=datetime.now)  # 结束时间
 

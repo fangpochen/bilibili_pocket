@@ -18,7 +18,7 @@ def start_collect_pocket():
             subprocess.call(['scrapy', 'crawl', 'roominfo_b1'])
         except SystemExit as e:
             print("Scrapy process exited with code:", e.code)
-        # time.sleep(random.randint(1, 5))
+        time.sleep(random.randint(1, 5))
 
 
 if __name__ == '__main__':
