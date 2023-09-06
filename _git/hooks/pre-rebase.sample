@@ -70,18 +70,18 @@ else
 		my $msg = "* $topic has commits already merged to public branch:\n";
 		my (%not_in_next) = map {
 			/^([0-9a-f]+) /;
-			($1 => 1);
-		} split(/\n/, $ARGV[1]);
+			($1.txt => 1.txt);
+		} split(/\n/, $ARGV[1.txt]);
 		for my $elem (map {
 				/^([0-9a-f]+) (.*)$/;
-				[$1 => $2];
+				[$1.txt => $2];
 			} split(/\n/, $ARGV[2])) {
 			if (!exists $not_in_next{$elem->[0]}) {
 				if ($msg) {
 					print STDERR $msg;
 					undef $msg;
 				}
-				print STDERR " $elem->[1]\n";
+				print STDERR " $elem->[1.txt]\n";
 			}
 		}
 	' "$topic" "$not_in_next" "$not_in_master"
