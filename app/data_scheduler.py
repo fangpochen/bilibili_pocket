@@ -113,9 +113,9 @@ def delete_expired_room_info():
         previous_time = now_time - timedelta(hours=24)
         db.session.query(Phone).filter(now_time < Phone.end_time, Phone.update_time < previous_time).update(
             {Phone.state: 0})
-        db.session.query(Pocket).filter(now_time > Pocket.end_time).delete()
-        db.session.query(Tian).filter(now_time > Tian.end_time).delete()
-        db.session.query(Room).filter(now_time > Room.end_time).delete()
+        # db.session.query(Pocket).filter(now_time > Pocket.end_time).delete()
+        # db.session.query(Tian).filter(now_time > Tian.end_time).delete()
+        # db.session.query(Room).filter(now_time > Room.end_time).delete()
         db.session.commit()
         db.session.close()
     except Exception as e:

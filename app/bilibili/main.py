@@ -22,35 +22,35 @@ class B_packet:
             "https": "http://%(user)s:%(pwd)s@%(proxy)s/" % {"user": username, "pwd": password, "proxy": tunnel}
         }
 
-        # self.proxies = None
-        self.db_name = "F:\下载\\bilibili_pocket\\app.db"
+        self.proxies = None
+        self.db_name = "F:\\下载\\bilibili_pocket\\app.db"
 
         self.table_name = "pocket"
         self.connection = sqlite3.connect(self.db_name, check_same_thread=False)
         self.cursor = self.connection.cursor()
 
         # 检查指定表是否存在
-        # self.cursor.execute(f"SELECT name FROM sqlite_master WHERE type='table' AND name='{self.table_name}'")
-        # table_exists = self.cursor.fetchone()
+        self.cursor.execute(f"SELECT name FROM sqlite_master WHERE type='table' AND name='{self.table_name}'")
+        table_exists = self.cursor.fetchone()
 
-        # # 如果不存在则创建表
-        # if not table_exists:
-        #     self.cursor.execute(f'''CREATE TABLE IF NOT EXISTS {self.table_name}
-        #                                                   (id INTEGER PRIMARY KEY AUTOINCREMENT,
-        #                                                   uid TEXT,
-        #                                                   roomid TEXT,
-        #                                                   主播名称 TEXT,
-        #                                                   房间标题 TEXT,
-        #                                                   在线人数 TEXT,
-        #                                                   红包价值 TEXT,
-        #                                                   剩余时间 TEXT,
-        #                                                   监测时间 TEXT)''')
+        # 如果不存在则创建表
+        if not table_exists:
+            self.cursor.execute(f'''CREATE TABLE IF NOT EXISTS {self.table_name}
+                                                          (id INTEGER PRIMARY KEY AUTOINCREMENT,
+                                                          uid TEXT,
+                                                          room_id TEXT,
+                                                          room_name TEXT,
+                                                          room_title TEXT,
+                                                          total_p INTEGER ,
+                                                          price TEXT,
+                                                          leave_time INTEGER,
+                                                          update_time DATETIME)''')
 
     def check_duplicate_data(self, data):
         """
             根据指定字段判断表中是否已有指定数据
         """
-        query = f"SELECT COUNT(*) FROM {self.table_name} WHERE roomid=?"
+        query = f"SELECT COUNT(*) FROM {self.table_name} WHERE room_id=?"
         self.cursor.execute(query, (data["roomid"],))
         count = self.cursor.fetchone()[0]
         return count > 0
@@ -62,12 +62,12 @@ class B_packet:
         """
         while True:
             try:
-                # if not self.check_duplicate_data(data):
-                self.cursor.execute(
-                    f"INSERT INTO {self.table_name} (uid, room_id, room_name,room_title,total_p,price,leave_time,update_time) "
-                    f"VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                    (data["uid"], data["roomid"], data["主播名称"], data["房间标题"], data["在线人数"], data["红包价值"],
-                     data["剩余时间"], data["监测时间"]))
+                if not self.check_duplicate_data(data):
+                    self.cursor.execute(
+                        f"INSERT INTO {self.table_name} (uid, room_id, room_name,room_title,total_p,price,leave_time,update_time) "
+                        f"VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                        (data["uid"], data["roomid"], data["主播名称"], data["房间标题"], data["在线人数"], data["红包价值"],
+                         data["剩余时间"], data["监测时间"]))
                 break
             except Exception as err:
                 print(err)
@@ -89,14 +89,14 @@ class B_packet:
 
             self.cursor.execute(f'''CREATE TABLE IF NOT EXISTS {self.table_name}
                                                                       (id INTEGER PRIMARY KEY AUTOINCREMENT,
-                                                                      uid TEXT,
-                                                                      roomid TEXT,
-                                                                      主播名称 TEXT,
-                                                                      房间标题 TEXT,
-                                                                      在线人数 TEXT,
-                                                                      红包价值 TEXT,
-                                                                      剩余时间 TEXT,
-                                                                      监测时间 TEXT)''')
+                                                          uid TEXT,
+                                                          room_id TEXT,
+                                                          room_name TEXT,
+                                                          room_title TEXT,
+                                                          total_p INTEGER ,
+                                                          price TEXT,
+                                                          leave_time INTEGER,
+                                                          update_time DATETIME)''')
             self.connection.commit()
 
     def convert_time_(self, timestamp):
@@ -159,7 +159,7 @@ class B_packet:
 
     def main(self):
         while True:
-            # self.clear_table()
+            self.clear_table()
             pool = ThreadPoolExecutor(max_workers=15)
             tasks = [pool.submit(self.search, page) for page in range(1, 950)]
             for t in tasks:
