@@ -2,6 +2,7 @@ import random
 import sqlite3
 import time
 from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime
 
 import requests
 
@@ -62,13 +63,23 @@ class B_packet:
             传入字典列表里的数据到数据库
         """
         while True:
+            datetime_object = datetime.strptime(data["监测时间"], '%Y-%m-%d %H:%M:%S')
             try:
                 if not self.check_duplicate_data(data):
                     self.cursor.execute(
                         f"INSERT INTO {self.table_name} (uid, room_id, room_name,room_title,total_p,price,leave_time,update_time) "
                         f"VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                        (data["uid"], data["roomid"], data["主播名称"], data["房间标题"], data["在线人数"], data["红包价值"],
-                         data["剩余时间"], data["监测时间"]))
+                        (str(data["uid"]), str(data["roomid"]), data["主播名称"], data["房间标题"], data["在线人数"], data["红包价值"],
+                         data["剩余时间"], datetime_object)
+                    )
+                else:
+                    self.cursor.execute(
+                        f"UPDATE {self.table_name} SET room_name = ?, room_title = ?, total_p = ?, price = ?, leave_time = ?, update_time = ? "
+                        f"WHERE room_id = ?",
+                        (
+                            data["主播名称"], data["房间标题"], data["在线人数"], data["红包价值"], data["剩余时间"], datetime_object,
+                            str(data["roomid"])))
+                self.connection.commit()
                 break
             except Exception as err:
                 print(err)
@@ -162,7 +173,7 @@ class B_packet:
     def main(self):
         while True:
             # self.clear_table()
-            pool = ThreadPoolExecutor(max_workers=15)
+            pool = ThreadPoolExecutor(max_workers=5)
             tasks = [pool.submit(self.search, page) for page in range(1, 950)]
             for t in tasks:
                 t.result()
