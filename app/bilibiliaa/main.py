@@ -42,9 +42,10 @@ class B_packet:
                                                           room_name TEXT,
                                                           room_title TEXT,
                                                           total_p INTEGER ,
-                                                          price TEXT,
+                                                          price INTEGER,
                                                           leave_time INTEGER,
-                                                          update_time DATETIME)''')
+                                                          update_time DATETIME,
+                                                          end_time DATETIME)''')
 
     def check_duplicate_data(self, data):
         """
@@ -94,9 +95,10 @@ class B_packet:
                                                           room_name TEXT,
                                                           room_title TEXT,
                                                           total_p INTEGER ,
-                                                          price TEXT,
+                                                          price INTEGER,
                                                           leave_time INTEGER,
-                                                          update_time DATETIME)''')
+                                                          update_time DATETIME,
+                                                          end_time DATETIME)''')
             self.connection.commit()
 
     def convert_time_(self, timestamp):
@@ -159,7 +161,7 @@ class B_packet:
 
     def main(self):
         while True:
-            self.clear_table()
+            # self.clear_table()
             pool = ThreadPoolExecutor(max_workers=15)
             tasks = [pool.submit(self.search, page) for page in range(1, 950)]
             for t in tasks:

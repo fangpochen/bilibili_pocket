@@ -14,7 +14,7 @@ class PocketModelView(ModelView):
     datamodel = SQLAInterface(Pocket)
     label_columns = {'price': '价值', 'room_id': '房间号', 'total_p': '在线人数', 'leave_time': '剩余秒数',
                      'update_time': '更新时间'}
-    list_columns = ["id", "price", "room_id", "total_p", "leave_time", "update_time"]
+    list_columns = ["id","uid","room_name","room_title", "price", "room_id", "total_p", "leave_time", "update_time"]
     add_columns = ["id", "price", "room_id", "total_p", "leave_time", "update_time"]
     edit_columns = ["id", "price", "room_id", "total_p", "leave_time", "update_time"]
     base_order = ("update_time", "asc")
